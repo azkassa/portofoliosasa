@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portofolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="progress"></div><div id="glow"></div>
+<nav id="nav">
+  <a href="#home" class="logo"><b>=</b></a>
+  <ul id="menu">
+    <li><a href="#home" class="on">Beranda</a></li><li><a href="#about">Tentang</a></li><li><a href="#skills">Keahlian</a></li><li><a href="#projects">Proyek</a></li><li><a href="#exp">Pengalaman</a></li><li><a href="#certs">Sertifikat</a></li><li><a href="#contact">Kontak</a></li>
+  </ul>
+  <div class="tools"><button class="ic" id="lang" aria-label="Switch to English">EN</button><button class="ic" id="theme" aria-label="Ganti tema">◐</button><button class="ic" id="burger" aria-label="Buka menu">☰</button></div>
+</nav>
+
+<header id="home">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap hero">
+    <p class="hi">Halo, saya</p>
+    <h1 id="name" aria-label="Azka Raissa">Azka <em>Raissa</em></h1>
+    <p class="role">Saya seorang <span id="type"></span></p>
+    <div class="btns"><a href="#projects" class="btn p">Lihat proyek saya</a><a href="#contact" class="btn o">Hubungi saya</a></div>
+  </div>
+  <div class="scroll"></div>
+</header>
+
+
+<section id="about"><div class="wrap about">
+  <div class="rv l"><div class="orb" id="orb"><div class="photo" id="photo" role="button" tabindex="0" aria-label="Ganti foto"><img id="face" alt="Foto Nadia Pratama" hidden><span class="ph" id="ph">NP<small>Klik untuk unggah foto</small></span><input type="file" id="file" accept="image/*" hidden></div></div></div>
+  <div class="rv r">
+    <h2>Membangun web yang enak dilihat dan mudah dipakai</h2>
+    <p class="sub" style="margin-bottom:0">Saya seorang siswa Rekayasa Perangkat Lunak. Saya suka mengubah ide menjadi situs yang cepat, responsif, dan punya karakter. www.</p>
+    <div class="stats">
+      <div class="stat"><b data-n="4">0</b><span>Tahun pengalaman</span></div>
+      <div class="stat"><b data-n="30">0</b><span>Proyek selesai</span></div>
+      <div class="stat"><b data-n="18">0</b><span>Klien puas</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="skills"><div class="wrap">
+  <h2 class="rv">Keahlian</h2><p class="sub rv">Teknologi yang saya pakai setiap hari.</p>
+  <div class="sk" id="skl"></div>
+</div></section>
+
+<section id="projects"><div class="wrap">
+  <h2 class="rv">Proyek yang telah dibuat</h2><p class="sub rv">Pilih kategori untuk menyaring proyek.</p>
+  <div class="filters rv">
+    <button class="fb on" data-f="all">Semua</button><button class="fb" data-f="web">Website</button><button class="fb" data-f="app">Aplikasi</button><button class="fb" data-f="ui">UI Design</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section id="exp"><div class="wrap">
+  <h2 class="rv">Riwayat Pendidikan</h2><p class="sub rv">Pengalaman kerja dan pendidikan.</p>
+  <div class="tl">
+    <div class="rv l"><small>2025 – Sekarang</small><h3>SMK Plus Pelita Nusantara</h3><p>Sebagai siswa aktif jurusan rekayasa perangkat lunak yang sedang menempuh pendidikan</p></div>
+    <div class="rv l"><small>2022 – 2025</small><h3>SMP Islam Ar-Ridho</h3><p>Sebagai siswa aktif yang sedang menempuh pendidikan</p></div>
+    <div class="rv l"><small>2016 – 2022</small><h3>SD Islam Karya Mukti</h3><p>Sebagai siswa aktif yang sedang menempuh pendidikan</p></div>
+  </div>
+</div></section>
+
+<section id="certs"><div class="wrap">
+  <h2 class="rv">Sertifikat</h2><p class="sub rv">Kursus dan sertifikasi yang telah saya selesaikan.</p>
+  <div class="grid certs" id="cg"></div>
+</div></section>
+
+<footer id="contact"><div class="wrap">
+  <h2 class="rv">Mari bekerja <em>bersama</em></h2>
+  <div class="ct">
+    <div class="rv l">
+      <a class="mail" href="mailto:nadia@email.com">zyurassa@email.com</a>
+      <div class="info"><span>📍 Bogor, Indonesia</span><span>📞 +62 851 8830 3360</span></div>
+      <div class="soc"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Instagram</a><a href="#">Dribbble</a></div>
+    </div>
+    <form class="rv r" id="form">
+      <div class="fld"><input id="n" placeholder=" " required><label for="n">Nama Anda</label></div>
+      <div class="fld"><input id="e" type="email" placeholder=" " required><label for="e">Email</label></div>
+      <div class="fld"><textarea id="m" placeholder=" " required></textarea><label for="m">Pesan</label></div>
+      <button class="btn p" type="submit">Kirim pesan</button><p id="msg" role="status"></p>
+    </form>
+  </div>
+  <div class="copy"><span>© 2026 M Azka Raissa. Seluruh hak dilindungi.</span><span>Dibuat dengan HTML, CSS &amp; JavaScript</span></div>
+</div></footer>
+<button class="ic" id="top" aria-label="Kembali ke atas">↑</button>
+
+<script src="script.js" defer></script>
+</body>
+</html>
