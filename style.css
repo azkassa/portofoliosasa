@@ -1,26 +1,15 @@
 /* ====================== VARIABEL & RESET ====================== */
+/* Tema dikunci ke mode gelap (fitur ganti tema sudah dihapus) */
 :root{
-  --bg:#f4efe6; --bg2:#e9e2d4;
+  --bg:#0f0b2b; --bg2:#17123a;
   --ink:#17123a; --ink2:#2a2358;
-  --txt:#17123a; --mute:#5d5878;
-  --gold:#c8962e; --card:#fffdf8;
-  --line:rgba(23,18,58,.15);
+  --txt:#f4efe6; --mute:#b3aecb;
+  --gold:#e0b04a; --card:#1c1746;
+  --line:rgba(244,239,230,.16);
+  color-scheme:dark;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-}
-
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0f0b2b; --bg2:#17123a; --txt:#f4efe6;
-    --mute:#b3aecb; --card:#1c1746; --line:rgba(244,239,230,.16);
-    --gold:#e0b04a;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0f0b2b; --bg2:#17123a; --txt:#f4efe6;
-  --mute:#b3aecb; --card:#1c1746; --line:rgba(244,239,230,.16);
-  --gold:#e0b04a;
 }
 
 *, *::before, *::after{ box-sizing:border-box; margin:0; }
@@ -98,12 +87,6 @@ nav ul a:hover::after, nav ul a.on::after{ width:100%; }
 }
 .ic:hover{ background:var(--gold); color:var(--ink); transform:rotate(20deg); }
 #burger{ display:none; }
-#lang{ font:700 .78rem Manrope,sans-serif; }
-#lang:hover{ transform:scale(1.12); }
-
-/* Efek fade sesaat saat bahasa sedang diganti */
-body.sw main, body.sw section, body.sw header .hero,
-body.sw footer .wrap{ opacity:.15; transition:opacity .2s; }
 
 /* ====================== HERO ====================== */
 #home{
@@ -197,9 +180,6 @@ h1 em{ color:#e0b04a; font-weight:400; }
 }
 @keyframes bob{ 50%{ translate:0 -14px; } }
 
-.ph{ text-align:center; line-height:1.1; }
-.ph small{ display:block; font:500 .8rem Manrope,sans-serif; margin-top:12px; opacity:.75; }
-
 .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
 .stat{ border-top:2px solid var(--gold); padding-top:12px; }
 .stat b{ font-family:Fraunces,serif; font-size:2.6rem; display:block; line-height:1; }
@@ -223,17 +203,18 @@ h1 em{ color:#e0b04a; font-weight:400; }
   background:transparent; color:var(--txt); font:inherit; font-weight:500;
   cursor:pointer; transition:.3s;
 }
-.fb:hover, .fb.on{ background:var(--ink); color:#f4efe6; border-color:var(--ink); }
-:root[data-theme="dark"] .fb.on,
-:root[data-theme="dark"] .fb:hover{ background:var(--gold); color:#17123a; }
+.fb:hover, .fb.on{ background:var(--gold); color:#17123a; border-color:var(--gold); }
 
 .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:26px; }
+
+/* Kartu proyek = link ke website project */
 .card{
+  display:block; cursor:pointer;
   background:var(--card); border:1px solid var(--line); border-radius:18px;
   overflow:hidden; transform-style:preserve-3d; will-change:transform;
   transition:transform .25s ease, opacity .4s, box-shadow .3s;
 }
-.card:hover{ box-shadow:0 24px 50px rgba(23,18,58,.22); }
+.card:hover{ box-shadow:0 24px 50px rgba(0,0,0,.4); }
 .card.hide{ display:none; }
 
 .th{
@@ -249,8 +230,16 @@ h1 em{ color:#e0b04a; font-weight:400; }
 }
 .card:hover .th::before{ opacity:1; }
 @keyframes spin{ to{ transform:rotate(360deg); } }
-.th span{ position:relative; transition:.5s; }
-.card:hover .th span{ transform:scale(1.25) rotate(-4deg); }
+.th .ico{ position:relative; transition:.5s; }
+.card:hover .th .ico{ transform:scale(1.25) rotate(-4deg); }
+
+/* Foto project menutupi gradasi + ikon */
+.th img{
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.card:hover .th img{ transform:scale(1.07); }
 
 .bd{ padding:22px; }
 .bd h3{ font-size:1.4rem; margin-bottom:8px; }
@@ -261,7 +250,7 @@ h1 em{ color:#e0b04a; font-weight:400; }
   background:var(--bg2); border:1px solid var(--line);
 }
 .lk{ font-weight:700; color:var(--gold); display:inline-block; transition:.3s; }
-.lk:hover{ letter-spacing:.06em; }
+.card:hover .lk{ letter-spacing:.06em; }
 
 /* ====================== PENGALAMAN (TIMELINE) ====================== */
 #exp{ background:var(--bg2); }
@@ -279,29 +268,76 @@ h1 em{ color:#e0b04a; font-weight:400; }
 .tl h3{ font-size:1.4rem; margin:2px 0 6px; }
 .tl p{ color:var(--mute); }
 
-/* ====================== SERTIFIKAT ====================== */
-.certs{ grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:20px; }
+/* ====================== SERTIFIKAT (GAMBAR + PERBESAR) ====================== */
+.certs{ grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr)); gap:22px; }
 .cert{
-  display:flex; gap:18px; align-items:center; padding:20px;
   background:var(--card); border:1px solid var(--line);
-  border-left:4px solid var(--gold); border-radius:14px;
+  border-radius:14px; overflow:hidden;
   transition:opacity .9s, transform .35s, box-shadow .35s;
 }
 .cert:hover{
-  transform:translateX(8px) !important;
-  box-shadow:0 14px 34px rgba(23,18,58,.18);
+  transform:translateY(-6px) !important;
+  box-shadow:0 18px 40px rgba(0,0,0,.4);
 }
-.seal{
-  flex:none; width:66px; height:66px; border-radius:50%;
-  background:conic-gradient(var(--gold),#f3dc9a,var(--gold),#f3dc9a,var(--gold));
-  display:grid; place-items:center; color:#17123a;
-  font:700 1rem Fraunces,serif;
-  box-shadow:0 0 0 4px var(--card), 0 0 0 6px var(--gold);
-  transition:transform .9s cubic-bezier(.2,.8,.2,1);
+.cimg{
+  position:relative; aspect-ratio:4/3; overflow:hidden;
+  background:var(--bg2); display:grid; place-items:center;
 }
-.cert:hover .seal{ transform:rotate(360deg) scale(1.08); }
-.cert h3{ font-size:1.15rem; margin-bottom:2px; }
-.cert p{ color:var(--mute); font-size:.9rem; margin-bottom:6px; }
+.cimg img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+/* Lapisan gelap saat kursor di atas sertifikat */
+.cimg::after{
+  content:""; position:absolute; inset:0; background:rgba(10,7,30,.55);
+  opacity:0; transition:opacity .3s; pointer-events:none;
+}
+.cert:hover .cimg::after{ opacity:1; }
+
+.zoom{
+  position:absolute; left:50%; top:50%; z-index:2;
+  transform:translate(-50%,-40%);
+  padding:10px 22px; border-radius:40px; border:0;
+  background:var(--gold); color:#17123a;
+  font:700 .95rem Manrope,sans-serif; cursor:pointer;
+  opacity:0; transition:opacity .3s, transform .3s;
+}
+.cert:hover .zoom, .zoom:focus-visible{ opacity:1; transform:translate(-50%,-50%); }
+
+/* Cadangan jika file gambar belum ada */
+.cph{ display:none; font:700 2.4rem Fraunces,serif; color:var(--gold); }
+.cimg.noimg .cph{ display:block; }
+.cimg.noimg .zoom{ display:none; }
+
+.cert figcaption{ padding:16px 18px 18px; }
+.cert h3{ font-size:1.1rem; margin-bottom:2px; }
+.cert p{ color:var(--mute); font-size:.88rem; }
+
+/* Layar sentuh tidak punya hover, jadi tombol selalu terlihat */
+@media (hover:none){
+  .zoom{ opacity:1; transform:translate(-50%,-50%); top:auto; bottom:12px; transform:translateX(-50%); }
+}
+
+/* Jendela pratinjau diperbesar */
+.lb{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(10,7,30,.92);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:64px 20px 24px;
+}
+.lb[hidden]{ display:none; }
+.lb img{
+  max-width:min(1000px,100%); max-height:78vh;
+  object-fit:contain; border-radius:10px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.lb p{ color:#cfc9e6; font-size:.95rem; text-align:center; }
+.lb-x{
+  position:absolute; top:calc(env(safe-area-inset-top,0px) + 16px); right:20px;
+  width:44px; height:44px; border-radius:50%;
+  border:1px solid rgba(244,239,230,.4); background:rgba(244,239,230,.08);
+  color:#f4efe6; font-size:1.2rem; cursor:pointer; transition:.3s;
+}
+.lb-x:hover{ background:var(--gold); color:#17123a; border-color:var(--gold); }
 
 /* ====================== FOOTER & KONTAK ====================== */
 footer{
@@ -349,7 +385,7 @@ form{ display:grid; gap:16px; }
 }
 textarea{ min-height:120px; resize:vertical; }
 form .btn{ cursor:pointer; font:inherit; font-weight:700; }
-#msg{ color:#e0b04a; min-height:1.5em; }
+#form-status{ color:#e0b04a; min-height:1.5em; }
 
 .copy{
   margin-top:70px; padding-top:24px;
