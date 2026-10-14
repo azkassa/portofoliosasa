@@ -257,13 +257,31 @@ function initTheme(){
 
 /* ====================== FORMULIR KONTAK ====================== */
 function initContactForm(){
-  $('#form').onsubmit = (e) => {
+  const form = $('#form');
+  const msg = $('#msg');
+  const en = () => currentLang === 'en';
+
+  form.onsubmit = async (e) => {
     e.preventDefault();
     const name = $('#n').value;
-    $('#msg').textContent = currentLang === 'en'
-      ? `Thank you, ${name}! Your message has been sent.`
-      : `Terima kasih, ${name}! Pesan Anda sudah terkirim.`;
-    e.target.reset();
+    msg.textContent = en() ? 'Sending...' : 'Mengirim...';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok){
+        msg.textContent = en()
+          ? `Thank you, ${name}! Your message has been sent.`
+          : `Terima kasih, ${name}! Pesan Anda sudah terkirim.`;
+        form.reset();
+      } else {
+        msg.textContent = en() ? 'Failed to send, please try again.' : 'Gagal mengirim, coba lagi.';
+      }
+    } catch (err) {
+      msg.textContent = en() ? 'Network error.' : 'Terjadi kesalahan jaringan.';
+    }
   };
 }
 
@@ -414,29 +432,6 @@ function initLanguageSwitch(){
   $('#lang').onclick = () => setLanguage(currentLang === 'id' ? 'en' : 'id');
   setLanguage(currentLang);
 }
-
-const form = document.getElementById("contact-form");
-const status = document.getElementById("form-status");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  status.textContent = "Mengirim...";
-  try {
-    const res = await fetch(form.action, {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
-    });
-    if (res.ok) {
-      status.textContent = "Pesan terkirim, terima kasih!";
-      form.reset();
-    } else {
-      status.textContent = "Gagal mengirim, coba lagi.";
-    }
-  } catch {
-    status.textContent = "Terjadi kesalahan jaringan.";
-  }
-});
 
 /* ====================== JALANKAN SEMUA ====================== */
 function init(){
