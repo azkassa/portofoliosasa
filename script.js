@@ -5,7 +5,6 @@ const $$ = (s) => [...document.querySelectorAll(s)];
 /* ====================== NAMA HURUF DEMI HURUF ====================== */
 function initNameAnimation(){
   const nameEl = $('#name');
-  // bungkus kata dalam <em> tetap menjadi <em>, sisanya teks biasa
   nameEl.innerHTML = [...nameEl.childNodes]
     .map(n => n.nodeType === 3 ? n.textContent : `<em>${n.textContent}</em>`)
     .join('');
@@ -56,28 +55,46 @@ const skills = [
   ['Node.js', 72], ['UI/UX & Figma', 85], ['Git & Deploy', 78],
 ];
 
+/*
+  PROYEK
+  Format: [judul, kategori, deskripsi, [tag], warna cadangan, ikon cadangan, FOTO, LINK]
+  - FOTO : letakkan file di folder  images/projects/  lalu tulis path-nya.
+           Jika file belum ada, otomatis tampil gradasi + ikon.
+  - LINK : ganti '#' dengan alamat website project, contoh 'https://tokokopi.vercel.app'
+*/
 const projects = [
   ['Toko Kopi Nusantara', 'web', 'E-commerce kopi lokal dengan keranjang belanja dan pembayaran.',
-    ['HTML','CSS','JS'], 'linear-gradient(135deg,#7a3e1d,#c8962e)', '☕'],
+    ['HTML','CSS','JS'], 'linear-gradient(135deg,#7a3e1d,#c8962e)', '☕',
+    'images/projects/toko-kopi.jpg', '#'],
   ['Catatan Harian', 'app', 'Aplikasi catatan dengan mode gelap dan penyimpanan offline.',
-    ['React','PWA'], 'linear-gradient(135deg,#2a2358,#5b3fd6)', '✎'],
+    ['React','PWA'], 'linear-gradient(135deg,#2a2358,#5b3fd6)', '✎',
+    'images/projects/catatan-harian.jpg', '#'],
   ['Dashboard Keuangan', 'ui', 'Desain dashboard pelacak pengeluaran dengan grafik interaktif.',
-    ['Figma','UI'], 'linear-gradient(135deg,#0f6e5a,#17123a)', '◔'],
+    ['Figma','UI'], 'linear-gradient(135deg,#0f6e5a,#17123a)', '◔',
+    'images/projects/dashboard-keuangan.jpg', '#'],
   ['Portal Wisata Bali', 'web', 'Situs pariwisata dengan galeri, peta, dan pemesanan tur.',
-    ['HTML','CSS','JS'], 'linear-gradient(135deg,#d8642c,#5b3fd6)', '✈'],
+    ['HTML','CSS','JS'], 'linear-gradient(135deg,#d8642c,#5b3fd6)', '✈',
+    'images/projects/wisata-bali.jpg', '#'],
   ['Kuis Interaktif', 'app', 'Aplikasi kuis dengan skor, timer, dan papan peringkat.',
-    ['JS','Node.js'], 'linear-gradient(135deg,#17123a,#c8962e)', '?'],
+    ['JS','Node.js'], 'linear-gradient(135deg,#17123a,#c8962e)', '?',
+    'images/projects/kuis.jpg', '#'],
   ['Rebrand Studio Batik', 'ui', 'Desain ulang identitas dan situs untuk studio batik modern.',
-    ['Figma','Branding'], 'linear-gradient(135deg,#8b1e4f,#2a2358)', '❖'],
+    ['Figma','Branding'], 'linear-gradient(135deg,#8b1e4f,#2a2358)', '❖',
+    'images/projects/studio-batik.jpg', '#'],
 ];
 
+/*
+  SERTIFIKAT
+  Format: [tahun, judul, penerbit, GAMBAR]
+  - GAMBAR : letakkan file di folder  images/sertifikat/  lalu tulis path-nya.
+*/
 const certificates = [
-  ['2024', 'AWS Cloud Practitioner', 'Amazon Web Services'],
-  ['2023', 'Meta Front-End Developer', 'Coursera'],
-  ['2023', 'Google UX Design', 'Google'],
-  ['2022', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia'],
-  ['2022', 'JavaScript Algorithms & Data Structures', 'freeCodeCamp'],
-  ['2021', 'Responsive Web Design', 'freeCodeCamp'],
+  ['2024', 'AWS Cloud Practitioner', 'Amazon Web Services', 'images/sertifikat/aws.jpg'],
+  ['2023', 'Meta Front-End Developer', 'Coursera', 'images/sertifikat/meta.jpg'],
+  ['2023', 'Google UX Design', 'Google', 'images/sertifikat/google-ux.jpg'],
+  ['2022', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia', 'images/sertifikat/dicoding.jpg'],
+  ['2022', 'JavaScript Algorithms & Data Structures', 'freeCodeCamp', 'images/sertifikat/freecodecamp-js.jpg'],
+  ['2021', 'Responsive Web Design', 'freeCodeCamp', 'images/sertifikat/freecodecamp-rwd.jpg'],
 ];
 
 function renderSkills(){
@@ -89,28 +106,69 @@ function renderSkills(){
 }
 
 function renderProjects(){
-  $('#grid').innerHTML = projects.map(([title, cat, desc, tags, bg, icon]) => `
-    <article class="card rv z" data-c="${cat}">
-      <div class="th" style="background:${bg}"><span>${icon}</span></div>
+  $('#grid').innerHTML = projects.map(([title, cat, desc, tags, bg, icon, image, url]) => {
+    const external = /^https?:\/\//.test(url);
+    const target = external ? 'target="_blank" rel="noopener noreferrer"' : '';
+    return `
+    <a class="card rv z" data-c="${cat}" href="${url}" ${target} aria-label="Buka proyek ${title}">
+      <div class="th" style="background:${bg}">
+        <span class="ico">${icon}</span>
+        <img src="${image}" alt="Tampilan proyek ${title}" loading="lazy" onerror="this.remove()">
+      </div>
       <div class="bd">
         <h3>${title}</h3>
         <p>${desc}</p>
         <div class="tags">${tags.map(t => `<i>${t}</i>`).join('')}</div>
-        <a class="lk" href="#">Lihat proyek →</a>
+        <span class="lk">Lihat proyek →</span>
       </div>
-    </article>`).join('');
+    </a>`;
+  }).join('');
 }
 
 function renderCertificates(){
-  $('#cg').innerHTML = certificates.map(([year, title, issuer]) => `
-    <article class="cert rv r">
-      <div class="seal">${year}</div>
-      <div>
-        <h3>${title}</h3>
-        <p>${issuer}</p>
-        <a class="lk" href="#">Lihat sertifikat</a>
+  $('#cg').innerHTML = certificates.map(([year, title, issuer, image], i) => `
+    <figure class="cert rv z">
+      <div class="cimg">
+        <img src="${image}" alt="Sertifikat ${title}" loading="lazy"
+             onerror="this.parentNode.classList.add('noimg');this.remove()">
+        <span class="cph">${year}</span>
+        <button class="zoom" type="button" data-i="${i}">⤢ Perbesar</button>
       </div>
-    </article>`).join('');
+      <figcaption>
+        <h3>${title}</h3>
+        <p>${issuer} · ${year}</p>
+      </figcaption>
+    </figure>`).join('');
+}
+
+/* ====================== PERBESAR SERTIFIKAT (LIGHTBOX) ====================== */
+function initCertificateZoom(){
+  const box = $('#lightbox');
+  const img = $('#lb-img');
+  const cap = $('#lb-cap');
+
+  function open(i){
+    const [year, title, issuer, src] = certificates[i];
+    img.src = src;
+    img.alt = 'Sertifikat ' + title;
+    cap.textContent = `${title} — ${issuer} (${year})`;
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    $('#lb-x').focus();
+  }
+  function close(){
+    box.hidden = true;
+    img.src = '';
+    document.body.style.overflow = '';
+  }
+
+  $('#cg').addEventListener('click', e => {
+    const btn = e.target.closest('.zoom');
+    if (btn) open(+btn.dataset.i);
+  });
+  $('#lb-x').onclick = close;
+  box.addEventListener('click', e => { if (e.target === box) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
 }
 
 /* ====================== ANIMASI MUNCUL SAAT SCROLL ====================== */
@@ -238,27 +296,7 @@ function initMobileMenu(){
   });
 }
 
-/* ====================== TEMA TERANG / GELAP ====================== */
-function initTheme(){
-  const root = document.documentElement;
-  try {
-    const saved = localStorage.getItem('theme');
-    if (saved) root.dataset.theme = saved;
-  } catch (e) {}
-
-  $('#theme').onclick = () => {
-    const isDark = root.dataset.theme
-      ? root.dataset.theme === 'dark'
-      : matchMedia('(prefers-color-scheme:dark)').matches;
-    root.dataset.theme = isDark ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-  };
-}
-
-/* ====================== FORMULIR KONTAK ====================== */
-
-/* ====================== FOTO PROFIL (UNGGAH + TILT 3D) ====================== */
-
+/* ====================== FOTO PROFIL (TILT 3D) ====================== */
 function initPhotoTilt(){
   const orb = $('#orb');
   const wrapper = orb.parentNode;
@@ -271,91 +309,30 @@ function initPhotoTilt(){
   wrapper.addEventListener('mouseleave', () => { orb.style.transform = ''; });
 }
 
-/* ====================== BAHASA: TERJEMAHAN OTOMATIS ====================== */
-// Menerjemahkan teks Indonesia -> Inggris otomatis lewat API MyMemory (gratis, tanpa API key).
-// Hasil terjemahan disimpan di localStorage supaya tidak perlu request ulang tiap ganti bahasa.
+/* ====================== FORMULIR KONTAK (FORMSPREE) ====================== */
+function initContactForm(){
+  const form = $('#contact-form');
+  const formStatus = $('#form-status');
 
-let currentLang = 'id';
-try { currentLang = localStorage.getItem('lang') || 'id'; } catch (e) {}
-
-const ariaLabels = {
-  id: { lang: 'Switch to English', theme: 'Ganti tema', burger: 'Buka menu', top: 'Kembali ke atas', photo: 'Ganti foto' },
-  en: { lang: 'Ganti ke Bahasa Indonesia', theme: 'Toggle theme', burger: 'Open menu', top: 'Back to top', photo: 'Change photo' },
-};
-
-// simpan teks asli tiap text-node, supaya bisa dikembalikan ke Bahasa Indonesia tanpa fetch ulang
-const originalText = new WeakMap();
-
-function collectTextNodes(){
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  const nodes = [];
-  let node;
-  while ((node = walker.nextNode())){
-    if (node.parentNode.closest('script, #type, #lang')) continue;
-    if (!originalText.has(node)) originalText.set(node, node.textContent);
-    if (originalText.get(node).trim()) nodes.push(node);
-  }
-  return nodes;
-}
-
-function getTranslationCache(){
-  try { return JSON.parse(localStorage.getItem('translationCache') || '{}'); }
-  catch (e) { return {}; }
-}
-function saveTranslationCache(cache){
-  try { localStorage.setItem('translationCache', JSON.stringify(cache)); }
-  catch (e) {}
-}
-
-async function translateToEnglish(text, cache){
-  if (cache[text]) return cache[text];
-  try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=id|en`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const translated = data?.responseData?.translatedText || text;
-    cache[text] = translated;
-    return translated;
-  } catch (e) {
-    return text; // kalau API gagal/offline, tampilkan teks asli saja
-  }
-}
-
-async function applyLanguage(lang){
-  const nodes = collectTextNodes();
-
-  if (lang === 'id'){
-    nodes.forEach(n => { n.textContent = originalText.get(n); });
-  } else {
-    const cache = getTranslationCache();
-    await Promise.all(nodes.map(async n => {
-      const original = originalText.get(n);
-      const trimmed = original.trim();
-      const translated = await translateToEnglish(trimmed, cache);
-      n.textContent = original.replace(trimmed, translated);
-    }));
-    saveTranslationCache(cache);
-  }
-
-  document.documentElement.lang = lang;
-  $('#lang').textContent = lang === 'en' ? 'ID' : 'EN';
-  Object.entries(ariaLabels[lang]).forEach(([key, value]) => {
-    $('#' + key)?.setAttribute('aria-label', value);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formStatus.textContent = 'Mengirim...';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok){
+        formStatus.textContent = 'Pesan terkirim, terima kasih!';
+        form.reset();
+      } else {
+        formStatus.textContent = 'Gagal mengirim, coba lagi.';
+      }
+    } catch {
+      formStatus.textContent = 'Terjadi kesalahan jaringan.';
+    }
   });
-}
-
-async function setLanguage(lang){
-  currentLang = lang;
-  try { localStorage.setItem('lang', lang); } catch (e) {}
-
-  document.body.classList.add('sw');
-  await applyLanguage(lang);
-  document.body.classList.remove('sw');
-}
-
-function initLanguageSwitch(){
-  $('#lang').onclick = () => setLanguage(currentLang === 'id' ? 'en' : 'id');
-  setLanguage(currentLang);
 }
 
 /* ====================== JALANKAN SEMUA ====================== */
@@ -371,35 +348,12 @@ function init(){
   initCounters();
   initProjectFilters();
   initCardTilt();
+  initCertificateZoom();
   initScrollEffects();
   initCursorGlow();
   initMobileMenu();
-  initTheme();
   initPhotoTilt();
-  initLanguageSwitch();
+  initContactForm();
 }
 
 init();
-
-const form = document.getElementById("contact-form");
-const status = document.getElementById("form-status");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  status.textContent = "Mengirim...";
-  try {
-    const res = await fetch(form.action, {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
-    });
-    if (res.ok) {
-      status.textContent = "Pesan terkirim, terima kasih!";
-      form.reset();
-    } else {
-      status.textContent = "Gagal mengirim, coba lagi.";
-    }
-  } catch {
-    status.textContent = "Terjadi kesalahan jaringan.";
-  }
-});
