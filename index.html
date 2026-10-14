@@ -31,8 +31,7 @@
 
 
 <section id="about"><div class="wrap about">
-  <div class="rv l"><div class="orb" id="orb"><div class="photo" id="photo" role="button" tabindex="0" aria-label="Ganti foto"><img id="face" alt="Foto Nadia Pratama" hidden><span class="ph" id="ph">NP<small>Klik untuk unggah foto</small></span><input type="file" id="file" accept="image/*" hidden></div></div></div>
-  <div class="rv r">
+  <div class="rv l"><div class="orb" id="orb"><div class="photo"><img src="photo.jpg" alt="Foto Azka Raissa"></div></div></div>
     <h2>Membangun web yang enak dilihat dan mudah dipakai</h2>
     <p class="sub" style="margin-bottom:0">Saya seorang siswa Rekayasa Perangkat Lunak. Saya suka mengubah ide menjadi situs yang cepat, responsif, dan punya karakter. www.</p>
     <div class="stats">
@@ -78,11 +77,12 @@
       <div class="info"><span>📍 Bogor, Indonesia</span><span>📞 +62 851 8830 3360</span></div>
       <div class="soc"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Instagram</a><a href="#">Dribbble</a></div>
     </div>
-    <form class="rv r" id="form" action="https://formspree.io/f/moejkyll" method="POST">
-  <div class="fld"><input id="n" name="name" placeholder=" " required><label for="n">Nama Anda</label></div>
-  <div class="fld"><input id="e" name="email" type="email" placeholder=" " required><label for="e">Email</label></div>
-  <div class="fld"><textarea id="m" name="message" placeholder=" " required></textarea><label for="m">Pesan</label></div>
-  <button class="btn p" type="submit">Kirim pesan</button><p id="msg" role="status"></p>
+    <form id="contact-form" action="https://formspree.io/f/moejkyll" method="POST">
+  <input type="text" name="name" placeholder="Nama Anda" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <textarea name="message" placeholder="Pesan" required></textarea>
+  <button type="submit">Kirim pesan</button>
+  <p id="form-status"></p>
 </form>
   </div>
   <div class="copy"><span>© 2026 M Azka Raissa. Seluruh hak dilindungi.</span><span>Dibuat dengan HTML, CSS &amp; JavaScript</span></div>
