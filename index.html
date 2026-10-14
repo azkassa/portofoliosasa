@@ -15,7 +15,7 @@
   <ul id="menu">
     <li><a href="#home" class="on">Beranda</a></li><li><a href="#about">Tentang</a></li><li><a href="#skills">Keahlian</a></li><li><a href="#projects">Proyek</a></li><li><a href="#exp">Pengalaman</a></li><li><a href="#certs">Sertifikat</a></li><li><a href="#contact">Kontak</a></li>
   </ul>
-  <div class="tools"><button class="ic" id="lang" aria-label="Switch to English">EN</button><button class="ic" id="theme" aria-label="Ganti tema">◐</button><button class="ic" id="burger" aria-label="Buka menu">☰</button></div>
+  <div class="tools"><button class="ic" id="burger" aria-label="Buka menu">☰</button></div>
 </nav>
 
 <header id="home">
@@ -32,8 +32,9 @@
 
 <section id="about"><div class="wrap about">
   <div class="rv l"><div class="orb" id="orb"><div class="photo"><img src="photo.jpg" alt="Foto Azka Raissa"></div></div></div>
+  <div class="rv r">
     <h2>Membangun web yang enak dilihat dan mudah dipakai</h2>
-    <p class="sub" style="margin-bottom:0">Saya seorang siswa Rekayasa Perangkat Lunak. Saya suka mengubah ide menjadi situs yang cepat, responsif, dan punya karakter. www.</p>
+    <p class="sub" style="margin-bottom:0">Saya seorang siswa Rekayasa Perangkat Lunak. Saya suka mengubah ide menjadi situs yang cepat, responsif, dan punya karakter.</p>
     <div class="stats">
       <div class="stat"><b data-n="4">0</b><span>Tahun pengalaman</span></div>
       <div class="stat"><b data-n="30">0</b><span>Proyek selesai</span></div>
@@ -78,16 +79,32 @@
       <div class="soc"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Instagram</a><a href="#">Dribbble</a></div>
     </div>
     <form id="contact-form" action="https://formspree.io/f/moejkyll" method="POST">
-  <input type="text" name="name" placeholder="Nama Anda" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <textarea name="message" placeholder="Pesan" required></textarea>
-  <button type="submit">Kirim pesan</button>
-  <p id="form-status"></p>
-</form>
+      <div class="fld">
+        <input type="text" id="f-name" name="name" placeholder=" " required>
+        <label for="f-name">Nama Anda</label>
+      </div>
+      <div class="fld">
+        <input type="email" id="f-email" name="email" placeholder=" " required>
+        <label for="f-email">Email</label>
+      </div>
+      <div class="fld">
+        <textarea id="f-msg" name="message" placeholder=" " required></textarea>
+        <label for="f-msg">Pesan</label>
+      </div>
+      <button type="submit" class="btn p">Kirim pesan</button>
+      <p id="form-status" role="status"></p>
+    </form>
   </div>
   <div class="copy"><span>© 2026 M Azka Raissa. Seluruh hak dilindungi.</span><span>Dibuat dengan HTML, CSS &amp; JavaScript</span></div>
 </div></footer>
 <button class="ic" id="top" aria-label="Kembali ke atas">↑</button>
+
+<!-- Pratinjau sertifikat diperbesar -->
+<div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Pratinjau sertifikat">
+  <button class="lb-x" id="lb-x" type="button" aria-label="Tutup">✕</button>
+  <img id="lb-img" alt="">
+  <p id="lb-cap"></p>
+</div>
 
 <script src="script.js" defer></script>
 </body>
