@@ -256,83 +256,8 @@ function initTheme(){
 }
 
 /* ====================== FORMULIR KONTAK ====================== */
-function initContactForm(){
-  const form = $('#form');
-  const msg = $('#msg');
-  const en = () => currentLang === 'en';
-
-  form.onsubmit = async (e) => {
-    e.preventDefault();
-    const name = $('#n').value;
-    msg.textContent = en() ? 'Sending...' : 'Mengirim...';
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (res.ok){
-        msg.textContent = en()
-          ? `Thank you, ${name}! Your message has been sent.`
-          : `Terima kasih, ${name}! Pesan Anda sudah terkirim.`;
-        form.reset();
-      } else {
-        msg.textContent = en() ? 'Failed to send, please try again.' : 'Gagal mengirim, coba lagi.';
-      }
-    } catch (err) {
-      msg.textContent = en() ? 'Network error.' : 'Terjadi kesalahan jaringan.';
-    }
-  };
-}
 
 /* ====================== FOTO PROFIL (UNGGAH + TILT 3D) ====================== */
-function initPhotoUpload(){
-  const face = $('#face');
-  const placeholder = $('#ph');
-
-  function showFace(src){
-    face.src = src;
-    face.hidden = false;
-    placeholder.hidden = true;
-  }
-
-  try {
-    const saved = localStorage.getItem('face');
-    if (saved) showFace(saved);
-  } catch (e) {}
-
-  $('#photo').onclick = () => $('#file').click();
-  $('#photo').onkeydown = (e) => {
-    if (e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      $('#file').click();
-    }
-  };
-  $('#file').onclick = (e) => e.stopPropagation();
-  $('#file').onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        // kompres agar tidak terlalu berat sebelum disimpan
-        const scale = Math.min(1, 800 / Math.max(img.width, img.height));
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        showFace(dataUrl);
-        try { localStorage.setItem('face', dataUrl); } catch (e) {}
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  };
-}
 
 function initPhotoTilt(){
   const orb = $('#orb');
@@ -450,10 +375,31 @@ function init(){
   initCursorGlow();
   initMobileMenu();
   initTheme();
-  initContactForm();
-  initPhotoUpload();
   initPhotoTilt();
   initLanguageSwitch();
 }
 
 init();
+
+const form = document.getElementById("contact-form");
+const status = document.getElementById("form-status");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  status.textContent = "Mengirim...";
+  try {
+    const res = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      status.textContent = "Pesan terkirim, terima kasih!";
+      form.reset();
+    } else {
+      status.textContent = "Gagal mengirim, coba lagi.";
+    }
+  } catch {
+    status.textContent = "Terjadi kesalahan jaringan.";
+  }
+});
