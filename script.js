@@ -415,6 +415,29 @@ function initLanguageSwitch(){
   setLanguage(currentLang);
 }
 
+const form = document.getElementById("contact-form");
+const status = document.getElementById("form-status");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  status.textContent = "Mengirim...";
+  try {
+    const res = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      status.textContent = "Pesan terkirim, terima kasih!";
+      form.reset();
+    } else {
+      status.textContent = "Gagal mengirim, coba lagi.";
+    }
+  } catch {
+    status.textContent = "Terjadi kesalahan jaringan.";
+  }
+});
+
 /* ====================== JALANKAN SEMUA ====================== */
 function init(){
   initNameAnimation();
