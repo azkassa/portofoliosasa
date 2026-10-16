@@ -51,8 +51,7 @@ function initTypewriter(){
 
 /* ====================== DATA: KEAHLIAN, PROYEK, SERTIFIKAT ====================== */
 const skills = [
-  ['HTML & CSS', 95], ['JavaScript', 90], ['React', 82],
-  ['Node.js', 72], ['UI/UX & Figma', 85], ['Git & Deploy', 78],
+  ['HTML & CSS', 95], ['JavaScript', 90], ['UI/UX & Figma', 85], ['Git & Deploy', 78],
 ];
 
 /*
