@@ -312,6 +312,18 @@ h1 em{ color:#e0b04a; font-weight:400; }
 .cert h3{ font-size:1.1rem; margin-bottom:2px; }
 .cert p{ color:var(--mute); font-size:.88rem; }
 
+/* Tombol unggah / hapus foto sertifikat */
+.cact{ display:flex; gap:10px; align-items:center; margin-top:12px; }
+.up, .rm{
+  padding:8px 16px; border-radius:40px; cursor:pointer;
+  font:700 .85rem Manrope,sans-serif; transition:.3s;
+}
+.up{ background:var(--gold); color:#17123a; border:0; }
+.up:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(224,176,74,.35); }
+.rm{ background:transparent; color:var(--mute); border:1px solid var(--line); }
+.rm:hover{ color:#f4efe6; border-color:var(--gold); }
+.rm[hidden]{ display:none; }
+
 /* Layar sentuh tidak punya hover, jadi tombol selalu terlihat */
 @media (hover:none){
   .zoom{ opacity:1; transform:translate(-50%,-50%); top:auto; bottom:12px; transform:translateX(-50%); }
