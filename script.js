@@ -124,11 +124,23 @@ function renderProjects(){
   }).join('');
 }
 
+/* Foto sertifikat yang diunggah disimpan di browser (localStorage) */
+const PHOTO_KEY = 'cert-photos';
+function loadPhotos(){
+  try { return JSON.parse(localStorage.getItem(PHOTO_KEY)) || {}; } catch { return {}; }
+}
+const certPhotos = loadPhotos();
+function savePhotos(){
+  try { localStorage.setItem(PHOTO_KEY, JSON.stringify(certPhotos)); return true; }
+  catch { return false; }
+}
+const certSrc = (i) => certPhotos[i] || certificates[i][3];
+
 function renderCertificates(){
-  $('#cg').innerHTML = certificates.map(([year, title, issuer, image], i) => `
-    <figure class="cert rv z">
+  $('#cg').innerHTML = certificates.map(([year, title, issuer], i) => `
+    <figure class="cert rv z" data-i="${i}">
       <div class="cimg">
-        <img src="${image}" alt="Sertifikat ${title}" loading="lazy"
+        <img src="${certSrc(i)}" alt="Sertifikat ${title}" loading="lazy"
              onerror="this.parentNode.classList.add('noimg');this.remove()">
         <span class="cph">${year}</span>
         <button class="zoom" type="button" data-i="${i}">⤢ Perbesar</button>
@@ -136,8 +148,71 @@ function renderCertificates(){
       <figcaption>
         <h3>${title}</h3>
         <p>${issuer} · ${year}</p>
+        <div class="cact">
+          <label class="up">📷 Unggah foto
+            <input type="file" accept="image/*" data-i="${i}" hidden>
+          </label>
+          <button class="rm" type="button" data-i="${i}" ${certPhotos[i] ? '' : 'hidden'}>Hapus</button>
+        </div>
       </figcaption>
     </figure>`).join('');
+}
+
+/* ====================== UNGGAH FOTO SERTIFIKAT ====================== */
+function resizeImage(file, max = 1400){
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => {
+      const scale = Math.min(1, max / Math.max(im.width, im.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(im.width * scale);
+      c.height = Math.round(im.height * scale);
+      c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL('image/jpeg', 0.82));
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); reject(); };
+    im.src = url;
+  });
+}
+
+function showCertImage(i){
+  const fig = $(`.cert[data-i="${i}"]`);
+  const box = fig.querySelector('.cimg');
+  box.classList.remove('noimg');
+  box.querySelector('img')?.remove();
+  const im = new Image();
+  im.alt = 'Sertifikat ' + certificates[i][1];
+  im.onerror = () => { box.classList.add('noimg'); im.remove(); };
+  im.src = certSrc(i);
+  box.prepend(im);
+  fig.querySelector('.rm').hidden = !certPhotos[i];
+}
+
+function initCertificateUpload(){
+  $('#cg').addEventListener('change', async (e) => {
+    const input = e.target.closest('input[type=file]');
+    if (!input || !input.files[0]) return;
+    const i = +input.dataset.i;
+    try {
+      certPhotos[i] = await resizeImage(input.files[0]);
+      if (!savePhotos()) alert('Foto tampil, tetapi penyimpanan browser penuh sehingga tidak akan tersimpan setelah halaman dimuat ulang.');
+      showCertImage(i);
+    } catch {
+      alert('File tidak bisa dibaca. Pilih file gambar (JPG/PNG/WebP).');
+    }
+    input.value = '';
+  });
+
+  $('#cg').addEventListener('click', (e) => {
+    const btn = e.target.closest('.rm');
+    if (!btn) return;
+    const i = +btn.dataset.i;
+    delete certPhotos[i];
+    savePhotos();
+    showCertImage(i);
+  });
 }
 
 /* ====================== PERBESAR SERTIFIKAT (LIGHTBOX) ====================== */
@@ -147,7 +222,8 @@ function initCertificateZoom(){
   const cap = $('#lb-cap');
 
   function open(i){
-    const [year, title, issuer, src] = certificates[i];
+    const [year, title, issuer] = certificates[i];
+    const src = certSrc(i);
     img.src = src;
     img.alt = 'Sertifikat ' + title;
     cap.textContent = `${title} — ${issuer} (${year})`;
@@ -348,6 +424,7 @@ function init(){
   initProjectFilters();
   initCardTilt();
   initCertificateZoom();
+  initCertificateUpload();
   initScrollEffects();
   initCursorGlow();
   initMobileMenu();
