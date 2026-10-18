@@ -1,362 +1,430 @@
-/* ====================== HELPER DASAR ====================== */
-const $  = (s) => document.querySelector(s);
-const $$ = (s) => [...document.querySelectorAll(s)];
+/* ====================== VARIABEL & RESET ====================== */
+/* Tema dikunci ke mode gelap (fitur ganti tema sudah dihapus) */
+:root{
+  --bg:#0f0b2b; --bg2:#17123a;
+  --ink:#17123a; --ink2:#2a2358;
+  --txt:#f4efe6; --mute:#b3aecb;
+  --gold:#e0b04a; --card:#1c1746;
+  --line:rgba(244,239,230,.16);
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
 
-/* ====================== NAMA HURUF DEMI HURUF ====================== */
-function initNameAnimation(){
-  const nameEl = $('#name');
-  nameEl.innerHTML = [...nameEl.childNodes]
-    .map(n => n.nodeType === 3 ? n.textContent : `<em>${n.textContent}</em>`)
-    .join('');
+*, *::before, *::after{ box-sizing:border-box; margin:0; }
 
-  let delayIndex = 0;
-  function splitIntoLetters(el){
-    [...el.childNodes].forEach(node => {
-      if (node.nodeType !== 3){ splitIntoLetters(node); return; }
-      const fragment = document.createDocumentFragment();
-      [...node.textContent].forEach(char => {
-        const span = document.createElement('span');
-        span.className = 'ch';
-        span.style.animationDelay = `${0.3 + delayIndex++ * 0.06}s`;
-        span.textContent = char === ' ' ? '\u00a0' : char;
-        span.setAttribute('aria-hidden', 'true');
-        fragment.appendChild(span);
-      });
-      node.replaceWith(fragment);
-    });
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px);
+}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:Manrope,system-ui,sans-serif;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+h1,h2,h3{ font-family:Fraunces,Georgia,serif; line-height:1.1; font-weight:700; }
+a{ color:inherit; text-decoration:none; }
+:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+
+.wrap{ max-width:1100px; margin:auto; padding:0 24px; }
+section{ padding:100px 0; }
+h2{ font-size:clamp(2rem,5vw,3.4rem); margin-bottom:14px; }
+.sub{ color:var(--mute); max-width:52ch; margin-bottom:48px; }
+
+/* ====================== INDIKATOR & EFEK GLOBAL ====================== */
+#progress{
+  position:fixed; top:0; left:0; height:3px; width:0;
+  background:var(--gold); z-index:100;
+}
+#glow{
+  position:fixed; width:340px; height:340px; border-radius:50%;
+  background:radial-gradient(circle,var(--gold),transparent 65%);
+  opacity:.18; pointer-events:none; z-index:0;
+  transform:translate(-50%,-50%);
+  transition:opacity .3s;
+}
+@media (hover:none){ #glow{ display:none; } }
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
   }
-  splitIntoLetters(nameEl);
+  .rv, h1 .ch, .hi, .role, .btns{ opacity:1; transform:none; }
 }
 
-/* ====================== EFEK MENGETIK (ROLE) ====================== */
-const roles = ['Web Developer', 'Frontend Engineer', 'UI Designer', 'Kreator Digital'];
+/* ====================== NAVIGASI ====================== */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:90;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 24px 14px;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:.4s;
+}
+nav.s{
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.logo{ font-family:Fraunces,serif; font-weight:700; font-size:1.4rem; }
+.logo b{ color:var(--gold); }
 
-function initTypewriter(){
-  let roleIndex = 0, charIndex = 0, deleting = false;
-  (function tick(){
-    const word = roles[roleIndex];
-    $('#type').textContent = word.slice(0, charIndex);
+nav ul{ display:flex; gap:24px; list-style:none; padding:0; }
+nav ul a{ position:relative; font-weight:500; font-size:.95rem; }
+nav ul a::after{
+  content:""; position:absolute; left:0; bottom:-4px;
+  height:2px; width:0; background:var(--gold); transition:.3s;
+}
+nav ul a:hover::after, nav ul a.on::after{ width:100%; }
 
-    if (!deleting && charIndex++ === word.length){
-      deleting = true;
-      return setTimeout(tick, 1400);
-    }
-    if (deleting && --charIndex === 0){
-      deleting = false;
-      roleIndex = (roleIndex + 1) % roles.length;
-    }
-    setTimeout(tick, deleting ? 45 : 90);
-  })();
+.tools{ display:flex; gap:10px; align-items:center; }
+.ic{
+  width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--line); background:transparent; color:var(--txt);
+  cursor:pointer; font-size:1.05rem; transition:.3s;
+}
+.ic:hover{ background:var(--gold); color:var(--ink); transform:rotate(20deg); }
+#burger{ display:none; }
+
+/* ====================== HERO ====================== */
+#home{
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:center; position:relative;
+  background:var(--ink); color:#f4efe6; overflow:hidden;
+  padding:120px 0 80px;
+}
+.blob{
+  position:absolute; border-radius:50%; filter:blur(70px); opacity:.5;
+  animation:float 12s ease-in-out infinite;
+}
+.b1{ width:420px; height:420px; background:#5b3fd6; top:-120px; right:-80px; }
+.b2{
+  width:340px; height:340px; background:#c8962e;
+  bottom:-140px; left:-100px; animation-delay:-5s; opacity:.35;
+}
+@keyframes float{ 50%{ transform:translate(40px,-50px) scale(1.15); } }
+
+.hero{ position:relative; z-index:1; }
+.hi{
+  color:#e0b04a; font-weight:500; margin-bottom:16px;
+  opacity:0; animation:up .8s .2s forwards;
+}
+h1{ font-size:clamp(3rem,10vw,7.5rem); letter-spacing:-.02em; }
+h1 .ch{
+  display:inline-block; opacity:0;
+  transform:translateY(60%) rotate(6deg);
+  animation:pop .7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+h1 em{ color:#e0b04a; font-weight:400; }
+@keyframes pop{ to{ opacity:1; transform:none; } }
+@keyframes up{ from{ opacity:0; transform:translateY(24px); } to{ opacity:1; transform:none; } }
+
+.role{
+  font-size:clamp(1.1rem,2.6vw,1.6rem); margin:26px 0 34px; min-height:2em;
+  opacity:0; animation:up .8s 1.6s forwards;
+}
+#type::after{ content:"|"; color:#e0b04a; animation:blink .8s infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+
+.btns{ display:flex; gap:14px; flex-wrap:wrap; opacity:0; animation:up .8s 1.9s forwards; }
+.btn{
+  display:inline-block; padding:14px 30px; border-radius:50px;
+  font-weight:700; border:2px solid #e0b04a; transition:.35s;
+  position:relative; overflow:hidden;
+}
+.btn.p{ background:#e0b04a; color:#17123a; }
+.btn.p:hover{ transform:translateY(-4px); box-shadow:0 12px 30px rgba(224,176,74,.4); }
+.btn.o{ color:#f4efe6; }
+.btn.o:hover{ background:#e0b04a; color:#17123a; transform:translateY(-4px); }
+
+.scroll{
+  position:absolute; bottom:26px; left:50%; width:24px; height:40px;
+  border:2px solid #f4efe6; border-radius:14px; opacity:.6;
+}
+.scroll::after{
+  content:""; position:absolute; left:50%; top:7px;
+  width:4px; height:8px; margin-left:-2px;
+  background:#e0b04a; border-radius:2px;
+  animation:sc 1.6s infinite;
+}
+@keyframes sc{ to{ transform:translateY(14px); opacity:0; } }
+
+/* ====================== TENTANG & FOTO ====================== */
+.about{ display:grid; grid-template-columns:1fr 1.3fr; gap:56px; align-items:center; }
+
+.orb{ position:relative; transition:transform .25s ease-out; transform-style:preserve-3d; }
+
+.photo{
+  aspect-ratio:4/5;
+  max-width:280px; margin:0 auto; /* atur ukuran foto dari sini */
+  border-radius:200px 200px 24px 24px;
+  background:linear-gradient(160deg,#5b3fd6,#17123a 60%,#c8962e);
+  position:relative; overflow:hidden; cursor:pointer;
+  display:grid; place-items:center;
+  font-family:Fraunces,serif; font-size:7rem; color:#f4efe6;
+  box-shadow:0 0 0 0 var(--gold);
+  transition:box-shadow .5s;
+  animation:morph 9s ease-in-out infinite, bob 5s ease-in-out infinite;
+}
+.photo:hover{ box-shadow:0 0 0 8px var(--gold); }
+.photo img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; border-radius:inherit;
+}
+@keyframes morph{
+  0%,100%{ border-radius:50% 50% 6% 6% / 40% 40% 6% 6%; }
+  33%{ border-radius:62% 38% 46% 54% / 55% 45% 55% 45%; }
+  66%{ border-radius:38% 62% 54% 46% / 45% 55% 45% 55%; }
+}
+@keyframes bob{ 50%{ translate:0 -14px; } }
+
+.stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
+.stat{ border-top:2px solid var(--gold); padding-top:12px; }
+.stat b{ font-family:Fraunces,serif; font-size:2.6rem; display:block; line-height:1; }
+.stat span{ color:var(--mute); font-size:.9rem; }
+
+/* ====================== KEAHLIAN ====================== */
+#skills{ background:var(--bg2); }
+.sk{ display:grid; grid-template-columns:1fr 1fr; gap:28px 56px; }
+.bar .t{ display:flex; justify-content:space-between; font-weight:500; margin-bottom:8px; }
+.bar .tr{ height:8px; border-radius:8px; background:var(--line); overflow:hidden; }
+.bar .f{
+  height:100%; width:0; border-radius:8px;
+  background:linear-gradient(90deg,var(--gold),#5b3fd6);
+  transition:width 1.4s cubic-bezier(.2,.8,.2,1);
 }
 
-/* ====================== DATA: KEAHLIAN, PROYEK, SERTIFIKAT ====================== */
-const skills = [
-  ['HTML & CSS', 95], ['JavaScript', 90], ['UI/UX & Figma', 85], ['Git & Deploy', 78],
-];
+/* ====================== PROYEK ====================== */
+.filters{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:34px; }
+.fb{
+  padding:9px 22px; border-radius:40px; border:1px solid var(--line);
+  background:transparent; color:var(--txt); font:inherit; font-weight:500;
+  cursor:pointer; transition:.3s;
+}
+.fb:hover, .fb.on{ background:var(--gold); color:#17123a; border-color:var(--gold); }
 
-/*
-  PROYEK
-  Format: [judul, kategori, deskripsi, [tag], warna cadangan, ikon cadangan, FOTO, LINK]
-  - FOTO : letakkan file di folder  images/projects/  lalu tulis path-nya.
-           Jika file belum ada, otomatis tampil gradasi + ikon.
-  - LINK : ganti '#' dengan alamat website project, contoh 'https://tokokopi.vercel.app'
-*/
-const projects = [
-  ['Toko Kopi Nusantara', 'web', 'E-commerce kopi lokal dengan keranjang belanja dan pembayaran.',
-    ['HTML','CSS','JS'], 'linear-gradient(135deg,#7a3e1d,#c8962e)', '☕',
-    'images/projects/toko-kopi.jpg', '#'],
-  ['Catatan Harian', 'app', 'Aplikasi catatan dengan mode gelap dan penyimpanan offline.',
-    ['React','PWA'], 'linear-gradient(135deg,#2a2358,#5b3fd6)', '✎',
-    'images/projects/catatan-harian.jpg', '#'],
-  ['Dashboard Keuangan', 'ui', 'Desain dashboard pelacak pengeluaran dengan grafik interaktif.',
-    ['Figma','UI'], 'linear-gradient(135deg,#0f6e5a,#17123a)', '◔',
-    'images/projects/dashboard-keuangan.jpg', '#'],
-  ['Portal Wisata Bali', 'web', 'Situs pariwisata dengan galeri, peta, dan pemesanan tur.',
-    ['HTML','CSS','JS'], 'linear-gradient(135deg,#d8642c,#5b3fd6)', '✈',
-    'images/projects/wisata-bali.jpg', '#'],
-  ['Kuis Interaktif', 'app', 'Aplikasi kuis dengan skor, timer, dan papan peringkat.',
-    ['JS','Node.js'], 'linear-gradient(135deg,#17123a,#c8962e)', '?',
-    'images/projects/kuis.jpg', '#'],
-  ['Rebrand Studio Batik', 'ui', 'Desain ulang identitas dan situs untuk studio batik modern.',
-    ['Figma','Branding'], 'linear-gradient(135deg,#8b1e4f,#2a2358)', '❖',
-    'images/projects/studio-batik.jpg', '#'],
-];
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:26px; }
 
-/*
-  SERTIFIKAT  (hanya developer yang mengatur dari sini)
-  Format: [tahun, judul, penerbit, FOTO]
-  Cara mengisi foto:
-    1. Simpan file foto sertifikat di folder  images/sertifikat/
-    2. Tulis path file-nya di kolom FOTO, contoh: 'images/sertifikat/aws.jpg'
-  Untuk menambah sertifikat, tambahkan satu baris baru di daftar di bawah.
-  Jika file foto belum ada, kartu otomatis menampilkan tahun sebagai pengganti.
-*/
-const certificates = [
-  ['2024', 'AWS Cloud Practitioner', 'Amazon Web Services', 'images/sertifikat/aws.jpg'],
-  ['2023', 'Meta Front-End Developer', 'Coursera', 'images/sertifikat/meta.jpg'],
-  ['2023', 'Google UX Design', 'Google', 'images/sertifikat/google-ux.jpg'],
-  ['2022', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia', 'images/sertifikat/dicoding.jpg'],
-  ['2022', 'JavaScript Algorithms & Data Structures', 'freeCodeCamp', 'images/sertifikat/freecodecamp-js.jpg'],
-  ['2021', 'Responsive Web Design', 'freeCodeCamp', 'images/sertifikat/freecodecamp-rwd.jpg'],
-];
+/* Kartu proyek = link ke website project */
+.card{
+  display:block; cursor:pointer;
+  background:var(--card); border:1px solid var(--line); border-radius:18px;
+  overflow:hidden; transform-style:preserve-3d; will-change:transform;
+  transition:transform .25s ease, opacity .4s, box-shadow .3s;
+}
+.card:hover{ box-shadow:0 24px 50px rgba(0,0,0,.4); }
+.card.hide{ display:none; }
 
-function renderSkills(){
-  $('#skl').innerHTML = skills.map(([name, value]) => `
-    <div class="bar rv">
-      <div class="t"><span>${name}</span><span>${value}%</span></div>
-      <div class="tr"><div class="f" data-w="${value}"></div></div>
-    </div>`).join('');
+.th{
+  height:190px; position:relative; overflow:hidden;
+  display:grid; place-items:center;
+  font-family:Fraunces,serif; font-size:3.4rem; color:#f4efe6;
+}
+.th::before{
+  content:""; position:absolute; inset:-40%;
+  background:conic-gradient(from 0deg, transparent, rgba(255,255,255,.22), transparent 40%);
+  animation:spin 6s linear infinite;
+  opacity:0; transition:.4s;
+}
+.card:hover .th::before{ opacity:1; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.th .ico{ position:relative; transition:.5s; }
+.card:hover .th .ico{ transform:scale(1.25) rotate(-4deg); }
+
+/* Foto project menutupi gradasi + ikon */
+.th img{
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.card:hover .th img{ transform:scale(1.07); }
+
+.bd{ padding:22px; }
+.bd h3{ font-size:1.4rem; margin-bottom:8px; }
+.bd p{ color:var(--mute); font-size:.95rem; margin-bottom:14px; }
+.tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tags i{
+  font-style:normal; font-size:.78rem; padding:3px 12px; border-radius:20px;
+  background:var(--bg2); border:1px solid var(--line);
+}
+.lk{ font-weight:700; color:var(--gold); display:inline-block; transition:.3s; }
+.card:hover .lk{ letter-spacing:.06em; }
+
+/* ====================== PENGALAMAN (TIMELINE) ====================== */
+#exp{ background:var(--bg2); }
+.tl{ border-left:2px solid var(--gold); padding-left:32px; display:grid; gap:34px; margin-left:8px; }
+.tl div{ position:relative; }
+.tl div::before{
+  content:""; position:absolute; left:-42px; top:8px;
+  width:18px; height:18px; border-radius:50%;
+  background:var(--gold); border:4px solid var(--bg2);
+  box-shadow:0 0 0 0 var(--gold);
+  animation:pulse 2.4s infinite;
+}
+@keyframes pulse{ 70%{ box-shadow:0 0 0 14px transparent; } }
+.tl small{ color:var(--gold); font-weight:700; }
+.tl h3{ font-size:1.4rem; margin:2px 0 6px; }
+.tl p{ color:var(--mute); }
+
+/* ====================== SERTIFIKAT (GAMBAR + PERBESAR) ====================== */
+.certs{ grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr)); gap:22px; }
+.cert{
+  background:var(--card); border:1px solid var(--line);
+  border-radius:14px; overflow:hidden;
+  transition:opacity .9s, transform .35s, box-shadow .35s;
+}
+.cert:hover{
+  transform:translateY(-6px) !important;
+  box-shadow:0 18px 40px rgba(0,0,0,.4);
+}
+.cimg{
+  position:relative; aspect-ratio:4/3; overflow:hidden;
+  background:var(--bg2); display:grid; place-items:center;
+}
+.cimg img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+/* Lapisan gelap saat kursor di atas sertifikat */
+.cimg::after{
+  content:""; position:absolute; inset:0; background:rgba(10,7,30,.55);
+  opacity:0; transition:opacity .3s; pointer-events:none;
+}
+.cert:hover .cimg::after{ opacity:1; }
+
+.zoom{
+  position:absolute; left:50%; top:50%; z-index:2;
+  transform:translate(-50%,-40%);
+  padding:10px 22px; border-radius:40px; border:0;
+  background:var(--gold); color:#17123a;
+  font:700 .95rem Manrope,sans-serif; cursor:pointer;
+  opacity:0; transition:opacity .3s, transform .3s;
+}
+.cert:hover .zoom, .zoom:focus-visible{ opacity:1; transform:translate(-50%,-50%); }
+
+/* Cadangan jika file gambar belum ada */
+.cph{ display:none; font:700 2.4rem Fraunces,serif; color:var(--gold); }
+.cimg.noimg .cph{ display:block; }
+.cimg.noimg .zoom{ display:none; }
+
+.cert figcaption{ padding:16px 18px 18px; }
+.cert h3{ font-size:1.1rem; margin-bottom:2px; }
+.cert p{ color:var(--mute); font-size:.88rem; }
+
+/* Layar sentuh tidak punya hover, jadi tombol selalu terlihat */
+@media (hover:none){
+  .zoom{ opacity:1; transform:translate(-50%,-50%); top:auto; bottom:12px; transform:translateX(-50%); }
 }
 
-function renderProjects(){
-  $('#grid').innerHTML = projects.map(([title, cat, desc, tags, bg, icon, image, url]) => {
-    const external = /^https?:\/\//.test(url);
-    const target = external ? 'target="_blank" rel="noopener noreferrer"' : '';
-    return `
-    <a class="card rv z" data-c="${cat}" href="${url}" ${target} aria-label="Buka proyek ${title}">
-      <div class="th" style="background:${bg}">
-        <span class="ico">${icon}</span>
-        <img src="${image}" alt="Tampilan proyek ${title}" loading="lazy" onerror="this.remove()">
-      </div>
-      <div class="bd">
-        <h3>${title}</h3>
-        <p>${desc}</p>
-        <div class="tags">${tags.map(t => `<i>${t}</i>`).join('')}</div>
-        <span class="lk">Lihat proyek →</span>
-      </div>
-    </a>`;
-  }).join('');
+/* Jendela pratinjau diperbesar */
+.lb{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(10,7,30,.92);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:64px 20px 24px;
+}
+.lb[hidden]{ display:none; }
+.lb img{
+  max-width:min(1000px,100%); max-height:78vh;
+  object-fit:contain; border-radius:10px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.lb p{ color:#cfc9e6; font-size:.95rem; text-align:center; }
+.lb-x{
+  position:absolute; top:calc(env(safe-area-inset-top,0px) + 16px); right:20px;
+  width:44px; height:44px; border-radius:50%;
+  border:1px solid rgba(244,239,230,.4); background:rgba(244,239,230,.08);
+  color:#f4efe6; font-size:1.2rem; cursor:pointer; transition:.3s;
+}
+.lb-x:hover{ background:var(--gold); color:#17123a; border-color:var(--gold); }
+
+/* ====================== FOOTER & KONTAK ====================== */
+footer{
+  background:var(--ink); color:#f4efe6;
+  padding:100px 0 30px; position:relative; overflow:hidden;
+}
+footer h2{ font-size:clamp(2.4rem,7vw,5rem); }
+footer h2 em{ color:#e0b04a; font-weight:400; }
+
+.ct{ display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:40px; }
+.ct a.mail{
+  font-family:Fraunces,serif; font-size:clamp(1.2rem,3.4vw,2rem);
+  border-bottom:2px solid #e0b04a; transition:.3s;
+}
+.ct a.mail:hover{ color:#e0b04a; }
+.info{ margin-top:26px; display:grid; gap:8px; color:#cfc9e6; }
+.soc{ display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; }
+.soc a{
+  padding:9px 20px; border:1px solid rgba(244,239,230,.35);
+  border-radius:40px; transition:.3s;
+}
+.soc a:hover{
+  background:#e0b04a; color:#17123a; border-color:#e0b04a;
+  transform:translateY(-5px);
 }
 
-function renderCertificates(){
-  $('#cg').innerHTML = certificates.map(([year, title, issuer, image], i) => `
-    <figure class="cert rv z">
-      <div class="cimg">
-        <img src="${image}" alt="Sertifikat ${title}" loading="lazy"
-             onerror="this.parentNode.classList.add('noimg');this.remove()">
-        <span class="cph">${year}</span>
-        <button class="zoom" type="button" data-i="${i}">⤢ Perbesar</button>
-      </div>
-      <figcaption>
-        <h3>${title}</h3>
-        <p>${issuer} · ${year}</p>
-      </figcaption>
-    </figure>`).join('');
+form{ display:grid; gap:16px; }
+.fld{ position:relative; }
+.fld input, .fld textarea{
+  width:100%; padding:20px 16px 8px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(244,239,230,.25); border-radius:12px;
+  color:#f4efe6; font:inherit; transition:.3s;
+}
+.fld label{
+  position:absolute; left:16px; top:14px; color:#b3aecb;
+  pointer-events:none; transition:.25s;
+}
+.fld input:focus, .fld textarea:focus{
+  border-color:#e0b04a; outline:none; background:rgba(255,255,255,.12);
+}
+.fld input:focus + label, .fld input:not(:placeholder-shown) + label,
+.fld textarea:focus + label, .fld textarea:not(:placeholder-shown) + label{
+  top:4px; font-size:.72rem; color:#e0b04a;
+}
+textarea{ min-height:120px; resize:vertical; }
+form .btn{ cursor:pointer; font:inherit; font-weight:700; }
+#form-status{ color:#e0b04a; min-height:1.5em; }
+
+.copy{
+  margin-top:70px; padding-top:24px;
+  border-top:1px solid rgba(244,239,230,.18);
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  color:#b3aecb; font-size:.9rem;
 }
 
-/* ====================== PERBESAR SERTIFIKAT (LIGHTBOX) ====================== */
-function initCertificateZoom(){
-  const box = $('#lightbox');
-  const img = $('#lb-img');
-  const cap = $('#lb-cap');
-
-  function open(i){
-    const [year, title, issuer, src] = certificates[i];
-    img.src = src;
-    img.alt = 'Sertifikat ' + title;
-    cap.textContent = `${title} — ${issuer} (${year})`;
-    box.hidden = false;
-    document.body.style.overflow = 'hidden';
-    $('#lb-x').focus();
-  }
-  function close(){
-    box.hidden = true;
-    img.src = '';
-    document.body.style.overflow = '';
-  }
-
-  $('#cg').addEventListener('click', e => {
-    const btn = e.target.closest('.zoom');
-    if (btn) open(+btn.dataset.i);
-  });
-  $('#lb-x').onclick = close;
-  box.addEventListener('click', e => { if (e.target === box) close(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+#top{
+  position:fixed; right:20px; bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
+  z-index:80; background:var(--gold); color:#17123a;
+  opacity:0; pointer-events:none; transform:translateY(20px);
 }
+#top.v{ opacity:1; pointer-events:auto; transform:none; }
 
 /* ====================== ANIMASI MUNCUL SAAT SCROLL ====================== */
-function initScrollReveal(){
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('in');
-      const bar = entry.target.querySelector('.f');
-      if (bar) bar.style.width = bar.dataset.w + '%';
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.15 });
-
-  $$('.rv').forEach((el, i) => {
-    const inGrid = el.closest('.grid, .sk');
-    el.style.transitionDelay = (inGrid ? (i % 3) * 0.12 : 0) + 's';
-    observer.observe(el);
-  });
+.rv{
+  opacity:0; transform:translateY(40px);
+  transition:opacity .9s, transform .9s cubic-bezier(.2,.8,.2,1);
 }
+.rv.l{ transform:translateX(-60px); }
+.rv.r{ transform:translateX(60px); }
+.rv.z{ transform:scale(.85); }
+.rv.in{ opacity:1; transform:none; }
 
-/* ====================== PENGHITUNG ANGKA STATISTIK ====================== */
-function initCounters(){
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      observer.unobserve(entry.target);
-
-      const target = +entry.target.dataset.n;
-      let start = null;
-      const step = (timestamp) => {
-        start ??= timestamp;
-        const progress = Math.min((timestamp - start) / 1600, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        entry.target.textContent = Math.round(target * eased) + '+';
-        if (progress < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    });
-  });
-  $$('[data-n]').forEach(el => observer.observe(el));
+/* ====================== RESPONSIVE ====================== */
+@media (max-width:900px){
+  section{ padding:70px 0; }
+  .about, .ct, .sk{ grid-template-columns:1fr; }
+  .photo{ max-width:220px; margin:0 auto 20px; font-size:5rem; }
+  #burger{ display:inline-block; }
+  nav ul{
+    position:fixed; inset:0; background:var(--ink); color:#f4efe6;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    gap:26px; font-size:1.6rem; z-index:-1;
+    clip-path:circle(0 at calc(100% - 44px) 40px);
+    transition:clip-path .6s;
+  }
+  nav ul.open{ clip-path:circle(150% at calc(100% - 44px) 40px); }
+  .stats{ gap:10px; }
+  .stat b{ font-size:2rem; }
 }
-
-/* ====================== FILTER PROYEK ====================== */
-function initProjectFilters(){
-  $$('.fb').forEach(button => {
-    button.onclick = () => {
-      $$('.fb').forEach(b => b.classList.remove('on'));
-      button.classList.add('on');
-
-      $$('.card').forEach(card => {
-        const show = button.dataset.f === 'all' || card.dataset.c === button.dataset.f;
-        card.classList.toggle('hide', !show);
-        if (!show) return;
-
-        card.style.transition = 'none';
-        card.style.opacity = 0;
-        card.style.transform = 'scale(.9)';
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          card.style.transition = '';
-          card.style.opacity = 1;
-          card.style.transform = '';
-        }));
-      });
-    };
-  });
-}
-
-/* ====================== KEMIRINGAN 3D KARTU PROYEK ====================== */
-function initCardTilt(){
-  $$('.card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transitionDelay = '0s';
-      card.style.transform = `perspective(800px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
-    });
-    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-  });
-}
-
-/* ====================== EFEK SCROLL: NAV, PROGRESS BAR, TOMBOL ATAS ====================== */
-function initScrollEffects(){
-  const sections = $$('header, section, footer');
-  const navLinks = $$('#menu a');
-
-  addEventListener('scroll', () => {
-    const y = scrollY;
-    const maxScroll = document.documentElement.scrollHeight - innerHeight;
-
-    $('#progress').style.width = (y / maxScroll * 100) + '%';
-    $('#nav').classList.toggle('s', y > 40);
-    $('#top').classList.toggle('v', y > 600);
-
-    let current = 'home';
-    sections.forEach(s => { if (y + 200 >= s.offsetTop) current = s.id; });
-    navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + current));
-  }, { passive: true });
-
-  $('#top').onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ====================== CAHAYA MENGIKUTI KURSOR ====================== */
-function initCursorGlow(){
-  addEventListener('mousemove', e => {
-    const glow = $('#glow');
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-  });
-}
-
-/* ====================== MENU MOBILE ====================== */
-function initMobileMenu(){
-  const menu = $('#menu');
-  const burger = $('#burger');
-
-  burger.onclick = () => {
-    menu.classList.toggle('open');
-    burger.textContent = menu.classList.contains('open') ? '✕' : '☰';
-  };
-  $$('#menu a').forEach(a => a.onclick = () => {
-    menu.classList.remove('open');
-    burger.textContent = '☰';
-  });
-}
-
-/* ====================== FOTO PROFIL (TILT 3D) ====================== */
-function initPhotoTilt(){
-  const orb = $('#orb');
-  const wrapper = orb.parentNode;
-  wrapper.addEventListener('mousemove', e => {
-    const r = orb.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    orb.style.transform = `perspective(700px) rotateY(${x * 22}deg) rotateX(${-y * 22}deg)`;
-  });
-  wrapper.addEventListener('mouseleave', () => { orb.style.transform = ''; });
-}
-
-/* ====================== FORMULIR KONTAK (FORMSPREE) ====================== */
-function initContactForm(){
-  const form = $('#contact-form');
-  const formStatus = $('#form-status');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    formStatus.textContent = 'Mengirim...';
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (res.ok){
-        formStatus.textContent = 'Pesan terkirim, terima kasih!';
-        form.reset();
-      } else {
-        formStatus.textContent = 'Gagal mengirim, coba lagi.';
-      }
-    } catch {
-      formStatus.textContent = 'Terjadi kesalahan jaringan.';
-    }
-  });
-}
-
-/* ====================== JALANKAN SEMUA ====================== */
-function init(){
-  initNameAnimation();
-  initTypewriter();
-
-  renderSkills();
-  renderProjects();
-  renderCertificates();
-
-  initScrollReveal();
-  initCounters();
-  initProjectFilters();
-  initCardTilt();
-  initCertificateZoom();
-  initScrollEffects();
-  initCursorGlow();
-  initMobileMenu();
-  initPhotoTilt();
-  initContactForm();
-}
-
-init();
