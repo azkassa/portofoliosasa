@@ -4,14 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Portofolio</title>
-<link rel="preconnect" href="https://fonts.gooapgleis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>
+  /* Kunci halaman selama loading + pengaman jika script utama gagal */
+  document.documentElement.classList.add('loading');
+  setTimeout(function(){
+    document.documentElement.classList.remove('loading');
+    var l = document.getElementById('loader'); if (l) l.remove();
+  }, 12000);
+</script>
+<noscript><style>#loader{display:none}</style></noscript>
 </head>
 <body>
+<!-- ====================== LOADING SCREEN ====================== -->
+<div id="loader" role="status" aria-label="Memuat halaman">
+  <div class="ld-sheet">
+    <div class="ld-top" aria-hidden="true">
+      <span>Azka Raissa</span>
+      <span class="ld-c"><i class="ld-dot"></i>Portofolio 2026</span>
+      <span class="ld-r" id="ld-clock">Bogor</span>
+    </div>
+    <div class="ld-bar" aria-hidden="true"><i id="ld-bar"></i></div>
+
+    <div class="ld-mid" aria-hidden="true">
+      <div>
+        <p class="ld-pre">Saya seorang</p>
+        <div class="ld-roll">
+          <div class="ld-track" id="ld-track">
+            <span>Web Developer</span><span>Frontend Engineer</span><span>UI Designer</span><span>Kreator Digital</span><span>Selamat datang.</span>
+          </div>
+        </div>
+      </div>
+      <p class="ld-idx" id="ld-idx">(01/04)</p>
+    </div>
+
+    <div class="ld-bottom" aria-hidden="true">
+      <div class="ld-count"><span id="ld-num">0</span><span class="pc">%</span></div>
+    </div>
+  </div>
+</div>
 <div id="progress"></div><div id="glow"></div>
 <nav id="nav">
-  <a href="#home" class="logo"><b>=</b></a>
   <ul id="menu">
     <li><a href="#home" class="on">Beranda</a></li><li><a href="#about">Tentang</a></li><li><a href="#skills">Keahlian</a></li><li><a href="#projects">Proyek</a></li><li><a href="#exp">Pengalaman</a></li><li><a href="#certs">Sertifikat</a></li><li><a href="#contact">Kontak</a></li>
   </ul>
@@ -31,14 +67,14 @@
 
 
 <section id="about"><div class="wrap about">
-  <div class="rv l"><div class="orb" id="orb"><div class="photo"><img src="photo.jpg" alt="Foto Azka Raissa"></div></div></div>
+  <div class="rv l"><div class="orb" id="orb"><div class="photo"><img src="image/photo.jpg" alt="Foto Azka Raissa"></div></div></div>
   <div class="rv r">
     <h2>Membangun web yang enak dilihat dan mudah dipakai</h2>
     <p class="sub" style="margin-bottom:0">Saya seorang siswa Rekayasa Perangkat Lunak. Saya suka mengubah ide menjadi situs yang cepat, responsif, dan punya karakter.</p>
     <div class="stats">
-      <div class="stat"><b data-n="2">2</b><span>Sebagai Siswa RPL</span></div>
-      <div class="stat"><b data-n="5">5</b><span>Teknologi Dikuasai</span></div>
-      <div class="stat"><b data-n="20">20</b><span>Proyek Mandiri</span></div>
+      <div class="stat"><b data-n="1">18</b><span>Proyek Mandiri</span></div>
+      <div class="stat"><b data-n="20">5</b><span>Teknologi Dikuasai</span></div>
+      <div class="stat"><b data-n="18">20</b><span>Proyek Selesai</span></div>
     </div>
   </div>
 </div></section>
@@ -66,7 +102,7 @@
 </div></section>
 
 <section id="certs"><div class="wrap">
-  <h2 class="rv">Sertifikat</h2><p class="sub rv">Kursus dan sertifikasi yang telah saya selesaikan.</p>
+  <h2 class="rv">Sertifikat</h2><p class="sub rv">Berikut daftar sertifikasi yang saya punya.</p>
   <div class="grid certs" id="cg"></div>
 </div></section>
 
@@ -79,6 +115,7 @@
       <div class="soc">
         <a href="https://github.com/https://github.com/azkassa" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="https://www.Instagram.com/in/https://www.instagram.com/saaathx/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.linkedin.com/in/muhammad-azka-raissa-685154446/?isSelfProfile=true" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
     </div>
     <form id="contact-form" action="https://formspree.io/f/moejkyll" method="POST">
@@ -107,6 +144,19 @@
   <button class="lb-x" id="lb-x" type="button" aria-label="Tutup">✕</button>
   <img id="lb-img" alt="">
   <p id="lb-cap"></p>
+</div>
+<div class="grid" id="grid">
+  <a class="card rv z" data-c="web" href="https://namaproyek.vercel.app">
+    <div class="th" style="background:linear-gradient(135deg,#7a3e1d,#c8962e)">
+      <img src="images/projects/foto.jpg" alt="Tampilan proyek" onerror="this.remove()">
+    </div>
+    <div class="bd">
+      <h3>Judul Proyek</h3>
+      <p>Deskripsi singkat.</p>
+      <div class="tags"><i>HTML</i><i>CSS</i></div>
+      <span class="lk">Lihat proyek →</span>
+    </div>
+  </a>
 </div>
 
 <script src="script.js" defer></script>
