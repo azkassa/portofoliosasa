@@ -93,11 +93,11 @@ const certificates = [
   ['2026', 'Roadmapping Game Effectively', 'Codelamp', 'image/sertifikat3.jpg'],
   ['2026', 'Analysis Data with library Python', 'FMIPA Univ Kebanggaan Republik Indonesia', 'image/sertifikat4.jpg'],
   ['2026', 'Uji Kompetensi Pengetahuan Gemini', 'Google Gemini', 'image/sertifikat5.jpg'],
-  ['2026', 'Responsive Web Design', 'freeCodeCamp', 'image/sertifikat6.jpg'],
+  ['2026', 'Uji Kompetensi Pengetahuan Universitas', 'Google Gemini', 'image/sertifikat6.jpg'],
   ['2026', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia', 'image/sertifikat7.jpg'],
   ['2026', 'Game Design', 'CodeLamp', 'image/sertifikat8.jpg'],
   ['2026', 'Pancawaluya', 'SMK Plus Pelita Nusantara', 'image/sertifikat9.jpg'],
-  ['2026', 'Belajar Membuat Aplikasi Back-End untuk Pemula', 'Dicoding Indonesia', 'image/sertifikat10.jpg'],
+  ['2026', 'Public Speaking', 'Galeria Potensi', 'image/sertifikat10.jpg'],
 ];
 
 function renderSkills(){
