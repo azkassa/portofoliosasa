@@ -69,16 +69,13 @@ const skills = [
 const projects = [
   ['TypeRacer', 'web', 'Game Belajar mengetik melalui balapan mobil.',
     ['HTML','CSS','JS'], 'linear-gradient(135deg,#7a3e1d,#c8962e)',
-    'image/imgproject/aplikasigudang.jpg', 'https://game-lyart-one-26.vercel.app'],
-  ['Catatan Harian', 'app', 'Aplikasi catatan dengan mode gelap dan penyimpanan offline.',
-    ['React','PWA'], 'linear-gradient(135deg,#2a2358,#5b3fd6)',
-    'images/projects/catatan-harian.jpg', '#'],
-  ['Dashboard Keuangan', 'ui', 'Desain dashboard pelacak pengeluaran dengan grafik interaktif.',
-    ['Figma','UI'], 'linear-gradient(135deg,#0f6e5a,#17123a)',
-    'images/projects/dashboard-keuangan.jpg', '#'],
-  ['Portal Wisata Bali', 'web', 'Situs pariwisata dengan galeri, peta, dan pemesanan tur.',
-    ['HTML','CSS','JS'], 'linear-gradient(135deg,#d8642c,#5b3fd6)',
-    'images/projects/wisata-bali.jpg', '#'],
+    'image/project3.jpg', 'https://github.com/azkassa/Typing-Race-Nitro-Ketik-'],
+  ['Portofolio', 'web', 'Portofolio Muhammad Azka Raissa.',
+    ['HTML', 'CSS', 'JS'], 'linear-gradient(135deg,#2a2358,#5b3fd6)',
+    'image/Porto.jpg', 'portofoliosasa.vercel.app'],
+      ['Sistem-gudang', 'web', 'Mengelola Barang Masuk dan Keluar di Gudang Serta Absensi Karyawan.',
+    ['HTML', 'CSS','PHP', 'Laravel'], 'linear-gradient(135deg,#7a3e1d,#c8962e)',
+    'image/project4.jpg', 'https://github.com/azkassa/sistem-gudang'],
 ];
 
 /*
@@ -92,14 +89,14 @@ const projects = [
 */
 const certificates = [
   ['2025', 'Introduction to Capture the Flag', 'ID-Networkers', 'image/sertifikat1.jpg'],
-  ['2026', 'Public Speaking', 'Galeria Potensi', 'image/sertifikat2.jpg'],
-  ['2023', 'Google UX Design', 'Google', 'image/sertifikat3.jpg'],
-  ['2022', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia', 'image/sertifikat4.jpg'],
-  ['2022', 'JavaScript Algorithms & Data Structures', 'freeCodeCamp', 'image/sertifikat5.jpg'],
-  ['2021', 'Responsive Web Design', 'freeCodeCamp', 'image/sertifikat6.jpg'],
+  ['2026', 'Seni Berkomunikasi', 'Galeria Potensi', 'image/sertifikat2.jpg'],
+  ['2026', 'Roadmapping Game Effectively', 'Codelamp', 'image/sertifikat3.jpg'],
+  ['2026', 'Analysis Data with library Python', 'FMIPA Univ Kebanggaan Republik Indonesia', 'image/sertifikat4.jpg'],
+  ['2026', 'Uji Kompetensi Pengetahuan Gemini', 'Google Gemini', 'image/sertifikat5.jpg'],
+  ['2026', 'Responsive Web Design', 'freeCodeCamp', 'image/sertifikat6.jpg'],
   ['2026', 'Belajar Dasar Pemrograman Web', 'Dicoding Indonesia', 'image/sertifikat7.jpg'],
-  ['2026', 'Belajar Fundamental Front-End Web Development', 'Dicoding Indonesia', 'image/sertifikat8.jpg'],
-  ['2026', 'Belajar Fundamental Back-End Web Development', 'Dicoding Indonesia', 'image/sertifikat9.jpg'],
+  ['2026', 'Game Design', 'CodeLamp', 'image/sertifikat8.jpg'],
+  ['2026', 'Pancawaluya', 'SMK Plus Pelita Nusantara', 'image/sertifikat9.jpg'],
   ['2026', 'Belajar Membuat Aplikasi Back-End untuk Pemula', 'Dicoding Indonesia', 'image/sertifikat10.jpg'],
 ];
 
@@ -114,7 +111,7 @@ function renderSkills(){
 function renderProjects(){
   $('#grid').innerHTML = projects.map(([title, cat, desc, tags, bg, image, url]) => {
     const ready = /^https?:\/\//.test(url);
-    const link = ready ? `href="${url}"` : 'href="#projects" onclick="return false" aria-disabled="true"';
+    const link = ready ? `href="${url}" target="_blank" rel="noopener noreferrer"` : 'href="#projects" onclick="return false" aria-disabled="true"';
     return `
     <a class="card rv z${ready ? '' : ' soon'}" data-c="${cat}" ${link} aria-label="Buka proyek ${title}">
       <div class="th" style="background:${bg}">
@@ -163,7 +160,7 @@ function initCertificateZoom(){
   }
   function close(){
     box.hidden = true;
-    img.src = '';
+    img.removeAttribute('src');
     document.body.style.overflow = '';
   }
 
@@ -271,6 +268,7 @@ function initScrollEffects(){
 
     let current = 'home';
     sections.forEach(s => { if (y + 200 >= s.offsetTop) current = s.id; });
+    if (innerHeight + y >= document.documentElement.scrollHeight - 4) current = sections[sections.length - 1].id;
     navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + current));
   }, { passive: true });
 
