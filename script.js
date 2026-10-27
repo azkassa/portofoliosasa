@@ -79,9 +79,6 @@ const projects = [
   ['Portal Wisata Bali', 'web', 'Situs pariwisata dengan galeri, peta, dan pemesanan tur.',
     ['HTML','CSS','JS'], 'linear-gradient(135deg,#d8642c,#5b3fd6)',
     'images/projects/wisata-bali.jpg', '#'],
-  ['Kuis Interaktif', 'app', 'Aplikasi kuis dengan skor, timer, dan papan peringkat.',
-    ['JS','Node.js'], 'linear-gradient(135deg,#17123a,#c8962e)',
-    'images/projects/kuis.jpg', '#'],
 ];
 
 /*
