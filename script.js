@@ -29,7 +29,7 @@ function initNameAnimation(){
 }
 
 /* ====================== EFEK MENGETIK (ROLE) ====================== */
-const roles = ['Web Developer', 'Frontend Engineer', 'UI Designer', 'Kreator Digital'];
+const roles = ['Web Developer', 'Frontend Engineer', 'UI Designer', 'Pelajar'];
 
 function initTypewriter(){
   let roleIndex = 0, charIndex = 0, deleting = false;
