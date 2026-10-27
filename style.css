@@ -140,7 +140,7 @@ h1 em{ color:#e0b04a; font-weight:400; }
 .btn.o:hover{ background:#e0b04a; color:#17123a; transform:translateY(-4px); }
 
 .scroll{
-  position:absolute; bottom:26px; left:50%; width:24px; height:40px;
+  position:absolute; bottom:26px; left:50%; margin-left:-12px; width:24px; height:40px;
   border:2px solid #f4efe6; border-radius:14px; opacity:.6;
 }
 .scroll::after{
@@ -410,6 +410,12 @@ form .btn{ cursor:pointer; font:inherit; font-weight:700; }
 .rv.z{ transform:scale(.85); }
 .rv.in{ opacity:1; transform:none; }
 
+/* Hover kartu: transisi cepat (menimpa durasi .9s milik .rv) */
+.card:hover, .cert:hover{
+  transition:transform .25s ease, opacity .4s, box-shadow .3s;
+  transition-delay:0s !important;
+}
+
 /* ====================== RESPONSIVE ====================== */
 @media (max-width:900px){
   section{ padding:70px 0; }
@@ -417,6 +423,8 @@ form .btn{ cursor:pointer; font:inherit; font-weight:700; }
   .photo{ max-width:220px; margin:0 auto 20px; font-size:5rem; }
   #burger{ display:inline-block; }
   nav{ justify-content:flex-end; }
+  /* backdrop-filter membuat menu fixed ikut mengecil, jadi dimatikan di mobile */
+  nav.s{ backdrop-filter:none; background:var(--bg); }
   nav ul{
     position:fixed; inset:0; background:var(--ink); color:#f4efe6;
     display:flex; flex-direction:column; justify-content:center; align-items:center;
